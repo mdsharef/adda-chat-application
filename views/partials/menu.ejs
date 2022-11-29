@@ -1,0 +1,42 @@
+<div class="menu">
+    <% if (loggedInUser && loggedInUser.username) { %>
+    <div class="menu-item"><a href="/inbox">Inbox</a></div>
+    <div class="menu-item"><a href="/users">Users</a></div>
+    <div class="menu-item">
+      <% if (loggedInUser && loggedInUser.avatar) { %>
+        <a href="/users/edit/<%= loggedInUser.id %>" style="cursor: pointer; margin-right: 5px;">
+          <img
+            src="/uploads/avatars/<%= loggedInUser.avatar %>"
+            alt="<%= loggedInUser.name %>"
+          />
+        </a>
+      <% } else { %>
+        <a href="/users/edit/<%= loggedInUser.id %>" style="cursor: pointer; margin-right: 5px;">
+          <img src="/images/nophoto.png" alt="<%= loggedInUser.name %>" />
+        </a>
+      <% } %>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+    <% } else { %>
+    <div class="menu-item"><a href="/inbox">Inbox</a></div>
+    <div class="menu-item"><a href="/users">Users</a></div>
+    <div class="menu-item"><a href="/">Login</a></div>
+    <% } %>
+  </div>
+  <script>
+    // toast
+    const logoutToast = Toastify({
+      text: "You are being logged out...",
+      duration: 1000,
+    });
+
+    function logout() {
+      fetch("/", {
+        method: "DELETE",
+      });
+      logoutToast.showToast();
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 1000);
+    }
+  </script>

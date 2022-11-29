@@ -1,0 +1,77 @@
+<%- include('../partials/header.ejs') %> 
+
+<div id="login-container" style="height: calc(100vh - 20px);">
+  <div id="left-column"></div>
+  <div id="branding">
+    <img src="/images/logo.png" />
+    <h1>Edit User</h1>
+  </div>
+  <div id="login-form">
+    <form 
+        method="post" 
+        action="/users/edit/<%= user._id %>"
+        enctype="multipart/form-data"
+        id="sign-up-form"
+    >
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter your name"
+        value="<%= user.name ? user.name : "" %>"
+      />
+      <% if (errors.name) { %>
+        <p class="error show"><%= errors.name.msg %></p>
+      <% } %>
+
+      <input 
+        type="email" 
+        name="email" 
+        placeholder="Enter your email" 
+        value="<%= user.email ? user.email : "" %>"
+      />
+      <% if (errors.email) { %>
+        <p class="error show"><%= errors.email.msg %></p>
+      <% } %>
+
+      <input 
+        type="text" 
+        name="mobile" 
+        placeholder="Enter your mobile number" 
+        value="<%= user.mobile ? user.mobile : "" %>"
+      />
+      <% if (errors.mobile) { %>
+        <p class="error show"><%= errors.mobile.msg %></p>
+      <% } %>
+
+      <input 
+        type="password" 
+        name="password" 
+        placeholder="Enter a strong password" 
+        disabled 
+      />
+      <% if (errors.password) { %>
+        <p class="error show"><%= errors.password.msg %></p>
+      <% } %>
+
+      <input 
+        type="file" 
+        name="avatar" 
+        placeholder="Insert your profile picture here" 
+      />
+      <% if (errors.avatar) { %>
+        <p class="error show"><%= errors.avatar.msg %></p>
+      <% } %>
+
+      <% if (errors.common) { %>
+        <p class="error show"><%= errors.common.msg %></p>
+      <% } %>          
+      <input type="submit" value="Update" />  
+    </form>
+    <!-- --- extra added -->
+    <p class="signup">Don't want to update? <a href="/inbox">Go to inbox</a></p>
+    <!-- ---- -->
+  </div>
+</div>
+
+</body>
+</html>

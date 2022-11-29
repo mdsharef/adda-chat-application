@@ -1,0 +1,87 @@
+<%- include('../partials/header.ejs') %> 
+<%- include('../partials/menu.ejs') %>  
+
+    <div class="manageUser-container">
+      <div id="title">
+        <h2>Manage Users</h2>
+      </div>
+
+      <div class="new-message-container new-user">
+        <a href="#" onclick="openModal()">+</a>
+      </div>
+
+      <div id="users-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Manage</th>
+            </tr>
+          </thead>
+          <tbody id="users-table">
+            <% users.forEach(user => { %> 
+              <tr id="<%= user._id %>">
+                <td class="name">
+                  <a href="/users/edit/<%= user._id %>" style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+                    <% if(user.avatar) { %> 
+                      <img src="/uploads/avatars/<%= user.avatar %>" />
+                    <% } else { %>
+                      <img src="/images/nophoto.png" alt="No Photo" />  
+                    <% } %> 
+                    <span style="color: #eee;"><%= user.name %></span>
+                  </a>
+                </td>
+                <td><%= user.email %></td>
+                <td class="manage">
+                  <img src="/images/trash.png" alt="Delete" onclick="deleteUser('<%= user._id %>', '<%= loggedInUser.id %>' )" />
+                </td>
+              </tr>
+            <% }) %> 
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <%- include('../partials/addUserModal.ejs') %> 
+
+    <script>
+      // toasts
+      const deleteToast = Toastify({
+          text: "User has been deleted successfully!",
+          duration: 3000,
+      });
+      const deleteErrorToast = Toastify({
+          text: "Could not delete the user!",
+          duration: 3000,
+      });
+      const cannotDeleteToast = Toastify({
+          text: "User can not be deleted!",
+          duration: 3000,
+      });
+
+      // remove user function
+      const deleteUser = async (userId, loggedInUserId) => {
+
+        const isUserItself = loggedInUserId.toString() === userId.toString();
+
+        if(!isUserItself) {
+          let res = await fetch(`/users/${userId}`, {
+            method: 'DELETE'
+          })
+
+          let result = await res.json();
+
+          if(result.errors) {
+            deleteErrorToast.showToast();
+          } else {
+            deleteToast.showToast();
+            document.getElementById(userId).remove();
+          }
+        } else {
+          cannotDeleteToast.showToast();
+        }  
+      }
+    </script>
+  </body>
+</html>

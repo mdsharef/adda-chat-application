@@ -1,0 +1,73 @@
+  <%- include('../partials/header.ejs') %> 
+
+    <div id="login-container" style="height: calc(100vh - 20px);">
+      <div id="left-column"></div>
+      <div id="branding">
+        <img src="/images/logo.png" />
+        <h1>Sign Up - Chat Application</h1>
+      </div>
+      <div id="login-form">
+        <form 
+            method="post" 
+            action="/users/signup"
+            enctype="multipart/form-data"
+            id="sign-up-form"
+        >
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+          />
+          <% if (errors.name) { %>
+            <p class="error show"><%= errors.name.msg %></p>
+          <% } %>
+
+          <input 
+            type="email" 
+            name="email" 
+            placeholder="Enter your email" 
+          />
+          <% if (errors.email) { %>
+            <p class="error show"><%= errors.email.msg %></p>
+          <% } %>
+
+          <input 
+            type="text" 
+            name="mobile" 
+            placeholder="Enter your mobile number" 
+          />
+          <% if (errors.mobile) { %>
+            <p class="error show"><%= errors.mobile.msg %></p>
+          <% } %>
+
+          <input 
+            type="password" 
+            name="password" 
+            placeholder="Enter a strong password"  
+          />
+          <% if (errors.password) { %>
+            <p class="error show"><%= errors.password.msg %></p>
+          <% } %>
+
+          <input 
+            type="file" 
+            name="avatar" 
+            placeholder="Insert your profile picture here" 
+          />
+          <% if (errors.avatar) { %>
+            <p class="error show"><%= errors.avatar.msg %></p>
+          <% } %>
+
+          <% if (errors.common) { %>
+            <p class="error show"><%= errors.common.msg %></p>
+          <% } %>          
+          <input type="submit" value="Signup" />  
+        </form>
+        <!-- --- extra added -->
+        <p class="signup">Have an account? <a href="/">Login</a></p>
+        <!-- ---- -->
+      </div>
+    </div>
+    
+  </body>
+</html>

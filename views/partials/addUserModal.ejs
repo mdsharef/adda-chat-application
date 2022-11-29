@@ -1,0 +1,112 @@
+<!-- Add User Modal -->
+<div class="modal-wrapper" id="add-user-modal">
+  <div class="modal">
+    <a href="#" onclick="closeModal()" class="modal-close">+</a>
+    <div class="modal-title">
+      <h2>Create New User</h2>
+    </div>
+    <div class="modal-body">
+      <form 
+        action="/users"
+        method="post"
+        enctype="multipart/form-data"
+        id="add-user-form"
+      >
+        <input type="text" placeholder="Enter name" name="name" />
+        <p class="error name-error"></p>
+
+        <input type="text" placeholder="enter email" name="email" />
+        <p class="error email-error"></p>
+
+        <input type="text" placeholder="enter mobile" name="mobile" />
+        <p class="error mobile-error"></p>
+
+        <input
+          type="password"
+          placeholder="enter password"
+          name="password"
+        />
+        <p class="error password-error"></p>
+
+        <input type="file" name="avatar" />
+        <p class="error avatar-error"></p>
+
+        <p class="error common-error"></p>
+
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  const modal = document.querySelector("#add-user-modal");
+  const form = document.querySelector("#add-user-form");
+
+  // success toast
+  const successToast = Toastify({
+    text: 'User created successfully. Reloading the list...',
+    duration: 1000,
+  });
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+  function openModal() {
+    modal.style.display = "block";
+  }
+
+  // form submit handler
+  form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    // clear errors first
+    const errorHolders = document.querySelectorAll('p.error');
+    for(let i = 0; i < errorHolders.length; i++ ) {
+      errorHolders[i].style.display = 'none';
+    }
+
+    const  inputErrors = document.querySelectorAll('input.error');
+    if(inputErrors.length > 0) {
+      for(let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove('error');
+      }
+    }
+
+    // prepare the form data
+    const formData = new FormData(form);
+    
+    // send the request to server
+    const res = await fetch('/users', {
+      method: 'POST',
+      body: formData
+    })
+
+    // get response
+    const result = await res.json();
+
+    // handling error
+    if(result.errors) {
+      Object.keys(result.errors).forEach((field)=> {
+        // add error class to all input
+        form[field].classList.add('error');
+        // setting all error to the corresponding input feild 
+        const errorHolder = document.querySelector(`.${field}-error`);
+        errorHolder.textContent = result.errors[field].msg;
+
+        // make all errorholder visible
+        errorHolder.style.display = 'block';
+      });
+    } else{
+      // success
+      successToast.showToast();
+      closeModal();
+      document.querySelector('p.error').style.display = 'none';
+
+      // reload the page after 1 second 
+      setTimeout(()=> {
+        location.reload();
+      }, 1000)
+    }
+  })
+
+</script>
